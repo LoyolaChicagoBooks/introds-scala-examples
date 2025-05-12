@@ -30,12 +30,13 @@ object EstimateArea:
       CSVFormat.DEFAULT.builder().setHeader("x", "y", "inside").setSkipHeaderRecord(true).get()
     )
 
-    if df.nrow() == 0 then
+    val totalCount = df.nrow()
+
+    if totalCount == 0 then
       println(s"Input file '${input}' is empty.")
       sys.exit(1)
 
     val insideCount = df.stream().filter(row => row.getBoolean("inside")).count()
-    val totalCount = df.nrow()
     val estimatedArea = 4.0 * insideCount / totalCount
     val resultText = f"Estimated area of unit circle: $estimatedArea%.5f using $insideCount/$totalCount darts"
 
