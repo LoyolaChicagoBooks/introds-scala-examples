@@ -20,13 +20,11 @@ object EstimateArea:
     @arg(short = 'o', doc = "Optional output file to write the estimated area") output: Option[String] = None
   ): Unit =
 
-    val inputPath = Path.of(input)
-
-    if !Files.exists(inputPath) then
+    if !Files.exists(Path.of(input)) then
       println(s"Input file '${input}' does not exist.")
       sys.exit(1)
 
-    val df: DataFrame = Read.csv(inputPath, 
+    val df: DataFrame = Read.csv(input,
       CSVFormat.DEFAULT.builder().setHeader("x", "y", "inside").setSkipHeaderRecord(true).get()
     )
 
