@@ -18,7 +18,7 @@ object LoadGraffitiData:
   @main
   def run(
     @arg(name = "input", short = 'i', doc = "Path to the input CSV file")
-    input: String
+    input: String = "dataset/311_graffiti.csv"
   ): Unit =
     val format = CSVFormat.DEFAULT.withFirstRecordAsHeader()
     val df = Read.csv(java.nio.file.Paths.get(input), format)
