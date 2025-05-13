@@ -44,3 +44,6 @@ project/project/
 # SBT configuration files
 # remove if specific version of SBT is required
 project/build.properties 
+
+# caching
+dataset/
