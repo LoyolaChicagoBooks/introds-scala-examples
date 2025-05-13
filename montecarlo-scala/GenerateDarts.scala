@@ -19,13 +19,10 @@ object GenerateDarts:
 
     Files.writeString(Path.of(output), s"x,y,inside\n", StandardCharsets.UTF_8)
 
-    val sb = new StringBuilder
     (1 to n).foreach: i =>
       val x = random.nextDouble() * 2 - 1
       val y = random.nextDouble() * 2 - 1
       val inside = x * x + y * y <= 1
-      sb.append(s"$x,$y,$inside\n")
-
-    Files.writeString(Path.of(output), sb, StandardCharsets.UTF_8, StandardOpenOption.APPEND)
+      Files.writeString(Path.of(output), s"$x,$y,$inside\n", StandardCharsets.UTF_8, StandardOpenOption.APPEND)
 
     println(s"Generated $n darts and saved to $output")
