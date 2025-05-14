@@ -11,10 +11,12 @@ import mainargs._
 object LoadGraffitiData:
   @main
   def run(
-    @arg(name = "input", short = 'i') input: String,
-    @arg(name = "limit", short = 'l') limit: Int = 5
+      @arg(name = "input", short = 'i') input: String,
+      @arg(name = "limit", short = 'l') limit: Int = 5
   ): Unit =
-    val reader = Files.newBufferedReader(Paths.get(input), StandardCharsets.UTF_8)
+
+    val reader =
+      Files.newBufferedReader(Paths.get(input), StandardCharsets.UTF_8)
     val parser = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(reader)
 
     val headers = parser.getHeaderNames.asScala
@@ -22,9 +24,11 @@ object LoadGraffitiData:
 
     val iter = parser.iterator().asScala
     println(s"\nFirst $limit rows:")
-    iter.take(limit).foreach: record =>
-      val row = headers.map(h => s"$h=${record.get(h)}").mkString(", ")
-      println(row)
+    iter
+      .take(limit)
+      .foreach: record =>
+        val row = headers.map(h => s"$h=${record.get(h)}").mkString(", ")
+        println(row)
 
   def main(args: Array[String]): Unit =
     ParserForMethods(this).runOrExit(args)
