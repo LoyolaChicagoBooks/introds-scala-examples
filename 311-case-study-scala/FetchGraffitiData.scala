@@ -1,9 +1,8 @@
 //> using scala "3.3.5"
 //> using dep "com.lihaoyi::mainargs:0.7.6"
 
-import java.net.URI
-import java.nio.file.{Files, Paths}
-import java.nio.channels.Channels
+import java.io.{BufferedInputStream, FileOutputStream}
+import java.net.URL
 import mainargs._
 
 object FetchGraffitiData:
@@ -11,14 +10,19 @@ object FetchGraffitiData:
 
   @main
   def run(
-    @arg(name = "output", short = 'o') output: String = "311_graffiti.csv"
+    @arg(name = "output", short = 'o', doc = "Path to save the downloaded CSV file")
+    output: String = "311_graffiti.csv"
   ): Unit =
-    val readableByteChannel = Channels.newChannel(URI.create(datasetURL).toURL.openStream())
-    val fileOutputStream = Files.newOutputStream(Paths.get(output))
-    fileOutputStream.getChannel.transferFrom(readableByteChannel, 0, Long.MaxValue)
-    readableByteChannel.close()
-    fileOutputStream.close()
+    val urlStream = new BufferedInputStream(new URL(datasetURL).openStream())
+    val fileOut = new FileOutputStream(output)
+
+    urlStream.transferTo(fileOut)
+
+    urlStream.close()
+    fileOut.close()
+
     println(s"Downloaded dataset to $output")
 
   def main(args: Array[String]): Unit =
     ParserForMethods(this).runOrExit(args)
+
