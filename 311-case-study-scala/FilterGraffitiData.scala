@@ -14,10 +14,11 @@ object FilterGraffitiData:
   @main
   def run(
     @arg(name = "input", short = 'i') input: String,
-    @arg(name = "status", short = 's') status: Option[String] = None,
-    @arg(name = "start-date") startDate: Option[String] = None,
-    @arg(name = "end-date") endDate: Option[String] = None,
-    @arg(name = "limit", short = 'l') limit: Int = 5
+    @arg(name = "status", short = 's') status: String = "Completed",
+    @arg(name = "start-date") startDate: String = "2025-01-01",
+    @arg(name = "end-date") endDate: String = "2025-01-31",
+    @arg(name = "limit", short = 'l') limit: Int = 5,
+    @arg(name = "count-only", doc = "If set, only print number of matching rows") countOnly: Boolean = false
   ): Unit =
     val reader = Files.newBufferedReader(Paths.get(input), StandardCharsets.UTF_8)
     val parser = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(reader)
@@ -25,19 +26,27 @@ object FilterGraffitiData:
     val fmt = DateTimeFormatter.ofPattern("MM/dd/yyyy")
 
     val filtered = parser.iterator().asScala.filter { record =>
-      val statusOK = status.forall(s => record.get("Status") == s)
-      val createdAt = LocalDate.parse(record.get("Creation Date"), fmt)
-      val startOK = startDate.forall(sd => !createdAt.isBefore(LocalDate.parse(sd)))
-      val endOK = endDate.forall(ed => !createdAt.isAfter(LocalDate.parse(ed)))
+      val rowStatus = record.get("Status")
+      val rowDate = LocalDate.parse(record.get("Creation Date"), fmt)
+
+      val statusOK = rowStatus == status
+      val startOK = !rowDate.isBefore(LocalDate.parse(startDate))
+      val endOK = !rowDate.isAfter(LocalDate.parse(endDate))
+
       statusOK && startOK && endOK
     }
 
-    val taken = filtered.take(limit).toList
-    println(s"Showing ${taken.size} matching rows:")
-    taken.foreach { record =>
-      val row = headers.map(h => s"$h=${record.get(h)}").mkString(", ")
-      println(row)
-    }
+    if countOnly then
+      val total = filtered.size
+      println(s"$total matching rows.")
+    else
+      val taken = filtered.take(limit).toList
+      println(s"Showing ${taken.size} matching rows:")
+      taken.foreach { record =>
+        val row = headers.map(h => s"$h=${record.get(h)}").mkString(", ")
+        println(row)
+      }
 
   def main(args: Array[String]): Unit =
     ParserForMethods(this).runOrExit(args)
+
