@@ -1,6 +1,6 @@
 //> using scala "3.3.5"
 //> using dep "com.lihaoyi::mainargs:0.7.6"
-//> using dep "org.apache.commons:commons-csv:1.10.0"
+//> using dep "org.apache.commons:commons-csv:1.14.0"
 
 import java.nio.file.{Files, Paths}
 import java.nio.charset.StandardCharsets
@@ -22,10 +22,9 @@ object LoadGraffitiData:
 
     val iter = parser.iterator().asScala
     println(s"\nFirst $limit rows:")
-    iter.take(limit).foreach { record =>
+    iter.take(limit).foreach: record =>
       val row = headers.map(h => s"$h=${record.get(h)}").mkString(", ")
       println(row)
-    }
 
   def main(args: Array[String]): Unit =
     ParserForMethods(this).runOrExit(args)

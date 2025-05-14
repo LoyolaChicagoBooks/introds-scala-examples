@@ -1,6 +1,6 @@
 //> using scala "3.3.5"
 //> using dep "com.lihaoyi::mainargs:0.7.6"
-//> using dep "org.apache.commons:commons-csv:1.10.0"
+//> using dep "org.apache.commons:commons-csv:1.14.0"
 
 import java.nio.file.{Files, Paths}
 import java.nio.charset.StandardCharsets
