@@ -1,7 +1,7 @@
 //> using scala "3.3.5"
 //> using dep "com.lihaoyi::mainargs:0.7.6"
 //> using dep "org.apache.commons:commons-csv:1.14.0"
-//> using dep "org.knowm.xchart::xchart:3.8.5"
+//> using dep "org.knowm.xchart:xchart:3.8.8"
 
 import java.nio.file.{Files, Paths}
 import java.nio.charset.StandardCharsets
@@ -20,13 +20,13 @@ object VisualizeGraffitiData:
     @arg(name = "output", short = 'o') output: String = "graffiti_trend.png"
   ): Unit =
     val reader = Files.newBufferedReader(Paths.get(input), StandardCharsets.UTF_8)
-    val parser = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(reader)
+    val parser = CSVFormat.DEFAULT.builder().setHeader().setSkipHeaderRecord(true).get().parse(reader)
     val fmt = DateTimeFormatter.ofPattern("MM/dd/yyyy")
 
     val monthly = scala.collection.mutable.Map.empty[String, Int].withDefaultValue(0)
     parser.iterator().asScala.foreach: record =>
       val date = LocalDate.parse(record.get("Creation Date"), fmt)
-      val key = f"${date.getYear}-%02d".format(date.getMonthValue)
+      val key = f"${date.getYear}-${date.getMonthValue}%02d"
       monthly(key) += 1
 
     val (months, counts) = monthly.toSeq.sortBy(_._1).unzip
@@ -38,7 +38,7 @@ object VisualizeGraffitiData:
       .yAxisTitle("Requests")
       .build()
 
-    chart.addSeries("Requests", months.asJava, counts.map(_.toInteger).asJava)
+    chart.addSeries("Requests", months.asJava, counts.asJava.asInstanceOf[java.util.List[Number]])
     BitmapEncoder.saveBitmap(chart, output, BitmapFormat.PNG)
 
     println(s"Saved chart to $output")
