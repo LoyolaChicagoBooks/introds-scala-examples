@@ -2,7 +2,7 @@
 //> using dep "com.lihaoyi::mainargs:0.7.6"
 
 import java.io.{BufferedInputStream, FileOutputStream}
-import java.net.URL
+import java.net.URI
 import mainargs._
 
 object FetchGraffitiData:
@@ -13,7 +13,7 @@ object FetchGraffitiData:
     @arg(name = "output", short = 'o', doc = "Path to save the downloaded CSV file")
     output: String = "311_graffiti.csv"
   ): Unit =
-    val urlStream = new BufferedInputStream(new URL(datasetURL).openStream())
+    val urlStream = new BufferedInputStream(URI.create(datasetURL).toURL().openStream())
     val fileOut = new FileOutputStream(output)
 
     urlStream.transferTo(fileOut)
@@ -24,5 +24,5 @@ object FetchGraffitiData:
     println(s"Downloaded dataset to $output")
 
   def main(args: Array[String]): Unit =
-    ParserForMethods(this).runOrExit(args)
+    ParserForMethods(this).runOrExit(args.toIndexedSeq)
 

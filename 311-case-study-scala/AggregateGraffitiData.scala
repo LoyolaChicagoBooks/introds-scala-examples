@@ -16,7 +16,7 @@ object AggregateGraffitiData:
     @arg(name = "top", short = 't') top: Int = 10
   ): Unit =
     val reader = Files.newBufferedReader(Paths.get(input), StandardCharsets.UTF_8)
-    val parser = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(reader)
+    val parser = CSVFormat.DEFAULT.builder().setHeader().setSkipHeaderRecord(true).get().parse(reader)
 
     val counter = scala.collection.mutable.Map.empty[String, Int].withDefaultValue(0)
     val iter = parser.iterator().asScala
@@ -31,4 +31,4 @@ object AggregateGraffitiData:
       case (k, v) => println(f"$k%-20s → $v%5d")
 
   def main(args: Array[String]): Unit =
-    ParserForMethods(this).runOrExit(args)
+    ParserForMethods(this).runOrExit(args.toIndexedSeq)

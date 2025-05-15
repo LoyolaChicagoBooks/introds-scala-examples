@@ -20,31 +20,30 @@ object SaveFilteredGraffitiData:
     @arg(name = "end-date") endDate: Option[String] = None
   ): Unit =
     val reader = Files.newBufferedReader(Paths.get(input), StandardCharsets.UTF_8)
-    val parser = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(reader)
+    val parser = CSVFormat.DEFAULT.builder().setHeader().setSkipHeaderRecord(true).get().parse(reader)
     val headers = parser.getHeaderNames.asScala
     val fmt = DateTimeFormatter.ofPattern("MM/dd/yyyy")
 
     val writer = Files.newBufferedWriter(Paths.get(output), StandardCharsets.UTF_8)
-    val printer = CSVFormat.DEFAULT
-      .withHeader(headers: _*)
+    val printer = CSVFormat.DEFAULT.builder
+      .setHeader(headers.toSeq*)
+      .get()
       .print(writer)
 
-    val matched = parser.iterator().asScala.filter { record =>
+    val matched = parser.iterator().asScala.filter: record =>
       val rowStatus = record.get("Status")
       val rowDate = LocalDate.parse(record.get("Creation Date"), fmt)
       val statusOK = status.forall(_ == rowStatus)
       val startOK = startDate.forall(sd => !rowDate.isBefore(LocalDate.parse(sd)))
       val endOK = endDate.forall(ed => !rowDate.isAfter(LocalDate.parse(ed)))
       statusOK && startOK && endOK
-    }
 
-    matched.foreach { record =>
+    matched.foreach: record =>
       val row = headers.map(record.get).asJava
       printer.printRecord(row)
-    }
 
     printer.close()
     println(s"Wrote filtered records to $output")
 
   def main(args: Array[String]): Unit =
-    ParserForMethods(this).runOrExit(args)
+    ParserForMethods(this).runOrExit(args.toIndexedSeq)

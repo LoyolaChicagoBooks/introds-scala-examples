@@ -24,11 +24,10 @@ object VisualizeGraffitiData:
     val fmt = DateTimeFormatter.ofPattern("MM/dd/yyyy")
 
     val monthly = scala.collection.mutable.Map.empty[String, Int].withDefaultValue(0)
-    parser.iterator().asScala.foreach { record =>
+    parser.iterator().asScala.foreach: record =>
       val date = LocalDate.parse(record.get("Creation Date"), fmt)
       val key = f"${date.getYear}-%02d".format(date.getMonthValue)
       monthly(key) += 1
-    }
 
     val (months, counts) = monthly.toSeq.sortBy(_._1).unzip
 
@@ -45,4 +44,4 @@ object VisualizeGraffitiData:
     println(s"Saved chart to $output")
 
   def main(args: Array[String]): Unit =
-    ParserForMethods(this).runOrExit(args)
+    ParserForMethods(this).runOrExit(args.toIndexedSeq)

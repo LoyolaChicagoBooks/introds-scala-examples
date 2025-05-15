@@ -20,12 +20,13 @@ object FilterGraffitiData:
     @arg(name = "limit", short = 'l') limit: Int = 5,
     @arg(name = "count-only", doc = "If set, only print number of matching rows") countOnly: Boolean = false
   ): Unit =
+
     val reader = Files.newBufferedReader(Paths.get(input), StandardCharsets.UTF_8)
-    val parser = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(reader)
+    val parser = CSVFormat.DEFAULT.builder().setHeader().setSkipHeaderRecord(true).get().parse(reader)
     val headers = parser.getHeaderNames.asScala
     val fmt = DateTimeFormatter.ofPattern("MM/dd/yyyy")
 
-    val filtered = parser.iterator().asScala.filter { record =>
+    val filtered = parser.iterator().asScala.filter: record =>
       val rowStatus = record.get("Status")
       val rowDate = LocalDate.parse(record.get("Creation Date"), fmt)
 
@@ -34,7 +35,6 @@ object FilterGraffitiData:
       val endOK = !rowDate.isAfter(LocalDate.parse(endDate))
 
       statusOK && startOK && endOK
-    }
 
     if countOnly then
       val total = filtered.size
@@ -42,11 +42,10 @@ object FilterGraffitiData:
     else
       val taken = filtered.take(limit).toList
       println(s"Showing ${taken.size} matching rows:")
-      taken.foreach { record =>
+      taken.foreach: record =>
         val row = headers.map(h => s"$h=${record.get(h)}").mkString(", ")
         println(row)
-      }
 
   def main(args: Array[String]): Unit =
-    ParserForMethods(this).runOrExit(args)
+    ParserForMethods(this).runOrExit(args.toIndexedSeq)
 

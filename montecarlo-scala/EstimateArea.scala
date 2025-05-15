@@ -25,7 +25,7 @@ object EstimateArea:
       sys.exit(1)
 
     val df: DataFrame = Read.csv(input,
-      CSVFormat.DEFAULT.builder().setHeader("x", "y", "inside").setSkipHeaderRecord(true).get()
+      CSVFormat.DEFAULT.builder().setHeader().setSkipHeaderRecord(true).get()
     )
 
     val totalCount = df.nrow()

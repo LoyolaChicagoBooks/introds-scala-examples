@@ -14,10 +14,9 @@ object LoadGraffitiData:
       @arg(name = "input", short = 'i') input: String,
       @arg(name = "limit", short = 'l') limit: Int = 5
   ): Unit =
-
     val reader =
       Files.newBufferedReader(Paths.get(input), StandardCharsets.UTF_8)
-    val parser = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(reader)
+    val parser = CSVFormat.DEFAULT.builder().setHeader().setSkipHeaderRecord(true).get().parse(reader)
 
     val headers = parser.getHeaderNames.asScala
     println(s"Headers: ${headers.mkString(", ")}")
@@ -31,4 +30,4 @@ object LoadGraffitiData:
         println(row)
 
   def main(args: Array[String]): Unit =
-    ParserForMethods(this).runOrExit(args)
+    ParserForMethods(this).runOrExit(args.toIndexedSeq)
