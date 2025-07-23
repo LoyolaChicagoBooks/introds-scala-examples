@@ -1,6 +1,6 @@
 //> using scala 3.3.6
 //> using dep "com.lihaoyi::mainargs:0.7.6"
-//> using dep "com.github.haifengl::smile-scala:4.3.0"
+//> using dep "com.github.haifengl::smile-scala:4.4.0"
 //> using dep "org.slf4j:slf4j-simple:2.0.17"
 
 import mainargs.{main, arg, ParserForMethods}
