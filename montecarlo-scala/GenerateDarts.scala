@@ -1,5 +1,5 @@
-//> using scala 3.3.6
-//> using dep "com.lihaoyi::mainargs:0.7.6"
+//> using scala 3.3.7
+//> using dep "com.lihaoyi::mainargs:0.7.8"
 
 import mainargs.{main, arg, ParserForMethods}
 import java.nio.file.{Path, Files, StandardOpenOption}
@@ -23,6 +23,9 @@ object GenerateDarts:
       val x = random.nextDouble() * 2 - 1
       val y = random.nextDouble() * 2 - 1
       val inside = x * x + y * y <= 1
-      Files.writeString(Path.of(output), s"$x,$y,$inside\n", StandardCharsets.UTF_8, StandardOpenOption.APPEND)
 
-    println(s"Generated $n darts and saved to $output")
+      Files.writeString(Path.of(output), s"$x,$y,$inside\n", StandardCharsets.UTF_8, StandardOpenOption.APPEND)
+      
+      if 100 * i % n == 0 then print(".")
+
+    println(s"\nGenerated $n darts and saved to $output")
