@@ -1,6 +1,5 @@
-//> using scala "3.3.5"
-//> using dep "com.lihaoyi::mainargs:0.7.6"
-//> using dep "me.tongfei:progressbar:0.10.1"
+//> using scala "3.3.7"
+//> using dep "com.lihaoyi::mainargs:0.7.8"
 
 import java.io.{FileOutputStream, InputStream}
 import java.net.URI

@@ -1,5 +1,5 @@
-//> using scala "3.3.5"
-//> using dep "com.lihaoyi::mainargs:0.7.6"
+//> using scala "3.3.7"
+//> using dep "com.lihaoyi::mainargs:0.7.8"
 
 import java.io.{BufferedInputStream, FileOutputStream}
 import java.net.URI
