@@ -15,8 +15,8 @@ object FilterGraffitiData:
   def run(
     @arg(name = "input", short = 'i') input: String,
     @arg(name = "status", short = 's') status: String = "Completed",
-    @arg(name = "start-date") startDate: String = "2025-01-01",
-    @arg(name = "end-date") endDate: String = "2025-01-31",
+    @arg(name = "start-date") startDate: String = "2000-01-01",
+    @arg(name = "end-date") endDate: String = "2025-12-31",
     @arg(name = "limit", short = 'l') limit: Int = 5,
     @arg(name = "count-only", doc = "If set, only print number of matching rows") countOnly: Boolean = false
   ): Unit =
